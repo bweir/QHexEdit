@@ -1,4 +1,4 @@
-include(../src.pri)
+QT += gui widgets
 
 TEMPLATE = lib
 TARGET = QHexEdit
