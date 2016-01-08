@@ -840,7 +840,7 @@ void QHexEditPrivate::updateCursorXY(qint64 pos, int charidx)
 
 void QHexEditPrivate::drawParts(QPainter &painter)
 {
-    int span = this->_charwidth / 2;
+//    int span = this->_charwidth / 2;
     painter.setBackgroundMode(Qt::TransparentMode);
 //    painter.setPen(this->palette().color(QPalette::WindowText));
 //    painter.drawLine(this->_xposhex - span, 0, this->_xposhex - span, this->height());
@@ -941,17 +941,17 @@ void QHexEditPrivate::drawAddress(QPainter &painter, QFontMetrics &fm, qint64 li
 void QHexEditPrivate::drawHex(QPainter &painter, QFontMetrics &fm, const QColor& bc, const QColor &fc, uchar b, qint64 i, int &x, int y)
 {
     QString s = QString("%1").arg(b, 2, 16, QLatin1Char('0')).toUpper();
-    int w = fm.width(s);
+    int w = fm.width(' ')*2;
     QRect r(x, y, w, this->_charheight);
-
-    if(i < (QHexEditPrivate::BYTES_PER_LINE - 1))
-        r.setWidth(r.width() + this->_charwidth);
 
     painter.fillRect(r, bc);
     painter.setPen(fc);
     painter.drawText(x, y, w, this->_charheight, Qt::AlignLeft | Qt::AlignTop, s);
 
     x += r.width();
+
+    if(i < (QHexEditPrivate::BYTES_PER_LINE - 1))
+        x += this->_charwidth;
 }
 
 void QHexEditPrivate::drawAscii(QPainter &painter, QFontMetrics &fm, const QColor &bc, const QColor &fc, uchar b, int &x, int y)
@@ -1020,8 +1020,10 @@ void QHexEditPrivate::colorize(uchar b, qint64 pos, QColor &bchex, QColor &fchex
 
         if((this->_selpart == QHexEditPrivate::AsciiPart || this->_selpart == QHexEditPrivate::HexPart) && (this->_selectionstart == this->_selectionend) && (pos == this->_cursorpos))
         {
-            bchex   = _addressforecolor;
-            bcascii = _addressforecolor;
+            if (_sellinecolor.lightness() < 128)
+                bchex = bcascii = _sellinecolor.lighter(200);
+            else
+                bchex = bcascii = _sellinecolor.darker(125);
         }
         else
             bchex = bcascii = bc;
