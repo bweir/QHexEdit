@@ -925,7 +925,7 @@ void QHexEditPrivate::drawAddress(QPainter &painter, QFontMetrics &fm, qint64 li
     qint64 linemax = this->_hexeditdata->length() / QHexEditPrivate::BYTES_PER_LINE;
     painter.fillRect(0, y, this->_xposhex - (this->_charwidth / 2), this->_charheight, this->_addressbackcolor);
 
-    if((this->_hexeditdata && line == 0) || (line < linemax))
+    if((this->_hexeditdata && line == 0) || (line <= linemax))
     {
         QString addr = QString("%1").arg(this->_baseaddress + (line * QHexEditPrivate::BYTES_PER_LINE), this->_addressWidth, 16, QLatin1Char('0')).toUpper();
 
