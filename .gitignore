@@ -38,3 +38,5 @@ Makefile*
 
 # Python build products
 python/build
+
+object_script.*
